@@ -1,7 +1,7 @@
 name: PetControl
 version: '${version}'
 main: org.infotoast.petcontrol.PetControl
-api-version: '1.21'
+api-version: '26.1'
 description: Manages pets, transfers ownership, and tames wild animals
 load: STARTUP
 author: Frank

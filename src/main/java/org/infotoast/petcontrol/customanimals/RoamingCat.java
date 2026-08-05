@@ -74,7 +74,7 @@ public class RoamingCat extends Cat {
         rcat.setHealth(cat.getHealth());
         rcat.setLeashData(cat.getLeashData());
         rcat.setNoAi(cat.isNoAi());
-        rcat.setPersistenceRequired(true);
+        rcat.setPersistenceRequired();
         if (cat.isSleeping()) {
             rcat.setSleepingPos(cat.getSleepingPos().get());
         }
@@ -108,7 +108,7 @@ public class RoamingCat extends Cat {
         cat.setHealth(this.getHealth());
         cat.setLeashData(this.getLeashData());
         cat.setNoAi(this.isNoAi());
-        cat.setPersistenceRequired(true);
+        cat.setPersistenceRequired();
         if (this.isSleeping()) {
             cat.setSleepingPos(this.getSleepingPos().get());
         }

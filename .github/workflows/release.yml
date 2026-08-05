@@ -1,0 +1,57 @@
+name: Build and Release
+
+# Kazda zmiana w kodzie pushnieta do main = automatyczny build + nowy release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # MC 26.1.2 wymaga Javy 25
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: temurin
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build --no-daemon
+
+      # Wersja leci z build.gradle, zeby tag nie byl zahardkodowany
+      - name: Read version from Gradle
+        id: ver
+        run: echo "version=$(./gradlew -q --no-daemon printVersion)" >> "$GITHUB_OUTPUT"
+
+      # gh release create zamiast upload-artifact - nie zjada limitu artefaktow
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.ver.outputs.version }}-build.${{ github.run_number }}"
+          JAR="build/libs/PetControl-${{ steps.ver.outputs.version }}.jar"
+          ls -la build/libs
+          gh release create "$TAG" \
+            "$JAR" \
+            --title "$TAG" \
+            --notes "Automatyczny release z commita ${{ github.sha }}.
+          Zbudowane przeciwko Paper 26.1.2 (Mojang-mapped, JDK 25).
+
+          $(git log -1 --pretty=%B)" \
+            --target "${{ github.sha }}"

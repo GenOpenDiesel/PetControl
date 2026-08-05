@@ -55,7 +55,7 @@ public class RoamingDog extends Wolf {
         rdog.setHealth(wolf.getHealth());
         rdog.setLeashData(wolf.getLeashData());
         rdog.setNoAi(wolf.isNoAi());
-        rdog.setPersistenceRequired(true);
+        rdog.setPersistenceRequired();
         if (wolf.isSleeping()) {
             rdog.setSleepingPos(wolf.getSleepingPos().get());
         }
@@ -88,7 +88,7 @@ public class RoamingDog extends Wolf {
         wolf.setHealth(this.getHealth());
         wolf.setLeashData(this.getLeashData());
         wolf.setNoAi(this.isNoAi());
-        wolf.setPersistenceRequired(true);
+        wolf.setPersistenceRequired();
         if (wolf.isSleeping()) {
             wolf.setSleepingPos(this.getSleepingPos().get());
         }

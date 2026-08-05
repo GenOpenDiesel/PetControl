@@ -1,11 +1,15 @@
 plugins {
     id 'java'
     id 'xyz.jpenilla.run-paper' version "3.0.2"
-    id "io.papermc.paperweight.userdev" version "2.0.0-beta.19"
+    id "io.papermc.paperweight.userdev" version "2.0.0-beta.21"
 }
 
 group = 'org.infotoast'
-version = '4.0'
+version = '4.1'
+
+// Paper build we compile against. Bump these (and only these) when moving to a new MC release.
+ext.paperVersion = '26.1.2.build.74-stable'
+ext.minecraftVersion = '26.1.2'
 
 repositories {
     mavenCentral()
@@ -21,25 +25,17 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle(project.ext.paperVersion)
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(targetJavaVersion)
 }
 
 processResources {
@@ -52,9 +48,17 @@ processResources {
 }
 
 runServer {
-    minecraftVersion("1.21.11")
+    minecraftVersion(project.ext.minecraftVersion)
 }
 
-tasks.assemble {
-    dependsOn(reobfJar)
+// Uzywane przez CI, zeby tag release'a nie byl zahardkodowany
+tasks.register('printVersion') {
+    def v = project.version.toString()
+    doLast { println v }
 }
+
+// NOTE: there is deliberately no `dependsOn(reobfJar)` here.
+// Paper runs Mojang-mapped at runtime and 26.x no longer remaps Spigot-mapped
+// plugins, so a reobfuscated jar dies with
+//   NoClassDefFoundError: net/minecraft/world/entity/EntityTameableAnimal
+// paperweight-userdev 2.x produces a Mojang-mapped jar by default -- that is what we ship.
