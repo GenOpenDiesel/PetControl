@@ -140,11 +140,9 @@ public class PetListener implements Listener {
 
     /*@EventHandler(priority = EventPriority.MONITOR)
     public void onEntityPoseChange(EntityPoseChangeEvent evt) {
-        System.out.println("Entity pose change event triggered for entity: " + evt.getEntity().getUniqueId());
         if (((CraftEntity)evt.getEntity()).getHandleRaw() instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
             TamedAnimalEntry tae = PetControl.cacheManager.getTamedAnimalFromUUID(tamableAnimal.getUUID());
             boolean isSitting = PetControl.isAnimalSitting(evt.getEntity());
-            System.out.println("Entity pose change event triggered for tamed animal: " + tamableAnimal.getUUID() + " isSitting: " + isSitting);
             if (tae != null) {
                 tae.setSitting(isSitting);
                 PetControl.cacheManager.removeByUUID(tamableAnimal.getUUID(), EntryType.TAMED);
@@ -184,12 +182,12 @@ public class PetListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(org.bukkit.event.entity.EntityDamageEvent evt) {
-        System.out.println("Entity damage event triggered for entity: " + evt.getEntity().getUniqueId());
+        if (!(evt.getEntity() instanceof org.bukkit.entity.Tameable)) {
+            return;
+        }
         if (((CraftEntity)evt.getEntity()).getHandleRaw() instanceof TamableAnimal tamableAnimal && tamableAnimal.isTame()) {
-            System.out.println("Entity damage event triggered for tamed animal: " + tamableAnimal.getUUID());
             TamedAnimalEntry tae = PetControl.cacheManager.getTamedAnimalFromUUID(tamableAnimal.getUUID());
             if (tae != null) {
-                System.out.println("Tamed animal entry found for UUID: " + tamableAnimal.getUUID() + "Guarded: " + tae.isGuarded());
                 if (tae.isGuarded()) {
                     evt.setCancelled(true);
                 }
