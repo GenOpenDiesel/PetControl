@@ -68,8 +68,12 @@ public final class PetControl extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        cacheManager.onShutdown();
-        petSitOrStandTracker.stop();
+        if (cacheManager != null) {
+            cacheManager.onShutdown();
+        }
+        if (petSitOrStandTracker != null) {
+            petSitOrStandTracker.stop();
+        }
         getServer().getConsoleSender().sendMessage("§l§bPetControl disabled.");
     }
 

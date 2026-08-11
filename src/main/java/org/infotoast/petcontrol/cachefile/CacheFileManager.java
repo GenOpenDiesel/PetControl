@@ -56,7 +56,17 @@ public class CacheFileManager {
             this.cacheFile = new File(fileName);
             if (this.cacheFile.exists() && !(this.cacheFile.length() == 0)) {
                 CacheFileLoader loader = new CacheFileLoader(this.cacheFile);
-                this.data = loader.getFromFile();
+                try {
+                    this.data = loader.getFromFile();
+                } catch (RuntimeException e) {
+                    // Keep the unreadable file around instead of overwriting it on shutdown,
+                    // so the pet data can still be recovered.
+                    File backup = new File(fileName + ".broken-" + System.currentTimeMillis());
+                    this.cacheFile.renameTo(backup);
+                    this.data = new CacheFile();
+                    PetControl.logger.severe("Could not read cache.dat (" + e + "). It has been moved to "
+                            + backup.getName() + " and a fresh cache was started.");
+                }
             } else {
                 plugin.getDataFolder().mkdir();
                 this.cacheFile.createNewFile();
@@ -65,9 +75,15 @@ public class CacheFileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (this.data == null) {
+            this.data = new CacheFile();
+        }
     }
 
     private void writeFile() {
+        if (this.cacheFile == null || this.data == null) {
+            return;
+        }
         try (FileOutputStream fos = new FileOutputStream(this.cacheFile, false)) {
             fos.write(data.getBytes());
         } catch (IOException e) {
