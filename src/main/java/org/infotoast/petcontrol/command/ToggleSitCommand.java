@@ -32,6 +32,7 @@ public class ToggleSitCommand implements CommandExecutor {
                         if (tamableAnimal.isTame()) {
                             tamableAnimal.setOrderedToSit(!tamableAnimal.isOrderedToSit());
                             PetControl.cacheManager.getTamedAnimalFromUUID(tamableAnimal.getUUID()).setSitting(tamableAnimal.isOrderedToSit());
+                            PetControl.cacheManager.markDirty();
                             sender.sendMessage("§aZmieniono pozycję zwierzaka (siedzi/stoi).");
                             return true;
                         }

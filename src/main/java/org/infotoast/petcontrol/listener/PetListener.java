@@ -54,6 +54,7 @@ public class PetListener implements Listener {
                             } else {
                                 // TODO: Find way not to perform this operation twice
                                 PetControl.cacheManager.getTamedAnimalFromUUID(entity.getUniqueId()).setSitting(true);
+                                PetControl.cacheManager.markDirty();
                             }
                             entityIsRoaming = true;
                         } else {
@@ -71,7 +72,11 @@ public class PetListener implements Listener {
                             PetControl.cacheManager.removeByUUID(entity.getUniqueId(), EntryType.ROAMING);
                             PetControl.cacheManager.removeByUUID(entity.getUniqueId(), EntryType.TAMED);
                             PetControl.cacheManager.addTamedAnimalEntry(tae);
+                            PetControl.cacheManager.removeByUUID(ent.getUUID(), EntryType.ROAMING);
+
                             ent.setUUID(newEntity.getUUID());
+
+                            PetControl.cacheManager.addRoamingAnimalEntry(ent);
                         }
                     } catch (EntityNotCatOrDogException e) {
                         PetControl.logger.warning("Error while loading roaming animal " + entity.getUniqueId() + ": " + e.getMessage());
@@ -161,6 +166,7 @@ public class PetListener implements Listener {
         TamedAnimalEntry tae = PetControl.cacheManager.getTamedAnimalFromUUID(evt.getEntity().getUniqueId());
         if (tae != null) {
             tae.setSitting(evt.isSitting());
+            PetControl.cacheManager.markDirty();
             PetControl.cacheManager.removeByUUID(evt.getEntity().getUniqueId(), EntryType.TAMED);
             PetControl.cacheManager.addTamedAnimalEntry(tae);
         } else {

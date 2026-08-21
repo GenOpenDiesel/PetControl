@@ -43,6 +43,7 @@ public class TransferPetOwnerCommand implements CommandExecutor {
                                 PetControl.cacheManager.removeByUUID(tamableAnimal.getUniqueId(), EntryType.TAMED);
                                 tae.setOwnerUUID(newOwner.getUniqueId());
                                 tae.setOwnerName(newOwner.getName());
+                                PetControl.cacheManager.markDirty();
                                 PetControl.cacheManager.addTamedAnimalEntry(tae);
                                 sender.sendMessage("§7Poprzedni właściciel: §f" + lastOwnerName);
                                 sender.sendMessage("§7Nowy właściciel: §f" + nextOwnerName);

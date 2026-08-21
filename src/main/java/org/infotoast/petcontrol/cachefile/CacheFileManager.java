@@ -13,8 +13,22 @@ public class CacheFileManager {
     private PetControl plugin;
     private File cacheFile;
     private CacheFile data;
+    // Zapisujemy tylko wtedy, gdy cokolwiek sie zmienilo - WorldSaveEvent leci raz na kazdy swiat.
+    private volatile boolean dirty = false;
+    private final Object writeLock = new Object();
     public CacheFileManager(PetControl plugin) {
         this.plugin = plugin;
+    }
+
+    public void markDirty() {
+        this.dirty = true;
+    }
+
+    public void rebuildIndex() {
+        if (data != null) {
+            data.rebuildIndex();
+            markDirty();
+        }
     }
 
     public static byte[] intToBytes(int i) {
@@ -84,10 +98,16 @@ public class CacheFileManager {
         if (this.cacheFile == null || this.data == null) {
             return;
         }
-        try (FileOutputStream fos = new FileOutputStream(this.cacheFile, false)) {
-            fos.write(data.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        writeBytes(data.getBytes());
+    }
+
+    private void writeBytes(byte[] bytes) {
+        synchronized (writeLock) {
+            try (FileOutputStream fos = new FileOutputStream(this.cacheFile, false)) {
+                fos.write(bytes);
+            } catch (IOException e) {
+                PetControl.logger.severe("Nie udalo sie zapisac cache.dat: " + e);
+            }
         }
     }
 
@@ -96,6 +116,7 @@ public class CacheFileManager {
                 cat.getRoamingRadius(), cat.getRoamingCenterX(), cat.getRoamingCenterZ(), cat.getUUID(), cat.isGuarded(), cat.isOrderedToSit());
 
         data.addAnimal(entry);
+        markDirty();
     }
 
     public void addRoamingDog(RoamingDog dog) {
@@ -103,15 +124,12 @@ public class CacheFileManager {
                 dog.getRoamingRadius(), dog.getRoamingCenterX(), dog.getRoamingCenterZ(), dog.getUUID(), dog.isGuarded(), dog.isOrderedToSit());
 
         data.addAnimal(entry);
+        markDirty();
     }
 
     public void removeByUUID(UUID uuid, EntryType entType) {
-        for (int i = 0; i < data.animals.size(); i++) {
-            CacheFileEntry entry = data.animals.get(i);
-            if (entry.getUUID().equals(uuid) && entry.getEntryType() == entType) {
-                data.animals.remove(i);
-            }
-        }
+        data.removeByUUID(uuid, entType);
+        markDirty();
     }
 
     public AnimalType getAnimalTypeFromEntity(org.bukkit.entity.Entity entity) {
@@ -131,40 +149,48 @@ public class CacheFileManager {
     }
 
     public RoamingAnimalEntry getRoamingAnimalFromUUID(UUID uuid) {
-        for (CacheFileEntry ent : data.animals) {
-            if (ent.getUUID().equals(uuid)) {
-                if (ent.getEntryType() == EntryType.ROAMING) {
-                    return (RoamingAnimalEntry) ent;
-                }
-            }
-        }
-        return null;
+        return data.getRoaming(uuid);
     }
 
     public TamedAnimalEntry getTamedAnimalFromUUID(UUID uuid) {
-        for (CacheFileEntry ent : data.animals) {
-            if (ent.getUUID().equals(uuid)) {
-                if (ent.getEntryType() == EntryType.TAMED) {
-                    return (TamedAnimalEntry) ent;
-                }
-            }
-        }
-        return null;
+        return data.getTamed(uuid);
     }
 
     public void addTamedAnimalEntry(TamedAnimalEntry entry) {
         data.addAnimal(entry);
+        markDirty();
+    }
+
+    public void addRoamingAnimalEntry(RoamingAnimalEntry entry) {
+        data.addAnimal(entry);
+        markDirty();
     }
 
     public void onShutdown() {
-        saveCache();
+        // Przy wylaczaniu zapisujemy synchronicznie - scheduler juz nie wystartuje zadania.
+        dirty = false;
+        writeFile();
     }
 
     public void saveCache() {
         writeFile();
+        dirty = false;
     }
 
+    /**
+     * Wolane przy zapisie swiata. Serializacja idzie na glownym watku (dane musza byc spojne),
+     * ale samo pisanie po dysku laduje na watek poboczny, zeby nie zacinac tickow.
+     */
     public void onAutoSave() {
-        saveCache();
+        if (!dirty || this.cacheFile == null || this.data == null) {
+            return;
+        }
+        dirty = false;
+        byte[] bytes = data.getBytes();
+        if (plugin.isEnabled()) {
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> writeBytes(bytes));
+        } else {
+            writeBytes(bytes);
+        }
     }
 }

@@ -137,7 +137,11 @@ public class RoamingDog extends Wolf {
 
     @Override
     public void setOrderedToSit(boolean orderedToSit) {
-        PetControl.cacheManager.getRoamingAnimalFromUUID(this.uuid).setSitting(orderedToSit);
+        org.infotoast.petcontrol.cachefile.RoamingAnimalEntry roamingEntry = PetControl.cacheManager.getRoamingAnimalFromUUID(this.uuid);
+        if (roamingEntry != null) {
+            roamingEntry.setSitting(orderedToSit);
+            PetControl.cacheManager.markDirty();
+        }
         super.setOrderedToSit(orderedToSit);
     }
 

@@ -38,6 +38,7 @@ public class GuardCommand implements CommandExecutor {
                         } else {
                             boolean isGuarded = PetControl.cacheManager.getTamedAnimalFromUUID(tameable.getUniqueId()).isGuarded();
                             PetControl.cacheManager.getTamedAnimalFromUUID(tameable.getUniqueId()).setGuarded(!isGuarded);
+                            PetControl.cacheManager.markDirty();
                             String guardStatus = (!isGuarded) ? "WŁĄCZONE" : "WYŁĄCZONE";
                             sender.sendMessage("§aPilnowanie terenu: §l" + guardStatus + "§r§a dla: §l" + tameable.getName());
                             return true;
