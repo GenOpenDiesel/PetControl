@@ -55,47 +55,47 @@ public class RoamCommand implements CommandExecutor {
                                     if (tamableAnimal instanceof Cat) {
                                         playerFacing.remove();
                                         RoamingCat rcat = RoamingCat.convertFromCat((Cat) tamableAnimal, x, z, radius, false);
-                                        sender.sendMessage("§bCat is now roaming. UUID: " + rcat.getUUID());
+                                        sender.sendMessage("§aKot chodzi teraz po wyznaczonym terenie. §7UUID: §f" + rcat.getUUID());
                                         enableRoamingInCache(tamableAnimal, rcat);
                                         return true;
                                     } else if (tamableAnimal instanceof Wolf) {
                                         playerFacing.remove();
                                         RoamingDog rdog = RoamingDog.convertFromWolf((Wolf) tamableAnimal, x, z, radius, false);
-                                        sender.sendMessage("§bDog is now roaming. UUID: " + rdog.getUUID());
+                                        sender.sendMessage("§aPies chodzi teraz po wyznaczonym terenie. §7UUID: §f" + rdog.getUUID());
                                         enableRoamingInCache(tamableAnimal, rdog);
                                         return true;
                                     }
                                 } else {
-                                    sender.sendMessage("§4You do not have permission to make other player's animals roam.");
-                                    return false;
+                                    sender.sendMessage("§cMożesz ustawiać wędrowanie tylko swoim zwierzakom.");
+                                    return true;
                                 }
                             } else {
-                                sender.sendMessage("§cIncorrect usage:");
-                                sender.sendMessage("Usage: /roam <radius> [center x] [center z] [guarded]");
-                                return false;
+                                sender.sendMessage("§cBłędne użycie komendy:");
+                                sender.sendMessage("§7/roam <promień> [środek x] [środek z] [pilnowanie]");
+                                return true;
                             }
                         } else {
-                            sender.sendMessage("§cCommand must be run on a tamed animal");
-                            return false;
+                            sender.sendMessage("§cTo stworzenie nie jest oswojone - najpierw je oswój.");
+                            return true;
                         }
                     } else {
-                        sender.sendMessage("§cAnimal must be tamable!");
-                        return false;
+                        sender.sendMessage("§cTego stworzenia nie da się oswoić. Wyceluj w psa, kota, konia itp.");
+                        return true;
                     }
                 } else {
-                    sender.sendMessage("§4You must face tamable animal.");
-                    return false;
+                    sender.sendMessage("§cWyceluj w zwierzaka, którego da się oswoić (pies, kot, koń itp.).");
+                    return true;
                 }
             } else {
-                sender.sendMessage("§4You do not have permission to use this command.");
+                sender.sendMessage("§cNie masz uprawnień do tej komendy.");
                 return true;
             }
         } else {
-            sender.sendMessage("Command must be run as a player.");
-            return false;
+            sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+            return true;
         }
-        sender.sendMessage("§4Unknown error. Please report this on GitHub issues.");
-        return false;
+        sender.sendMessage("§cCoś poszło nie tak. Zgłoś to administracji.");
+        return true;
     }
 
     private void enableRoamingInCache(TamableAnimal oldAnimal, TamableAnimal newAnimal) {

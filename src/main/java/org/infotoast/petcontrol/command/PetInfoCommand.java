@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import org.infotoast.petcontrol.PetControl;
@@ -38,15 +38,15 @@ public class PetInfoCommand implements CommandExecutor {
                     net.minecraft.world.entity.Entity animalFacing = craftPlayerFacing.getHandle();
                     if (animalFacing instanceof TamableAnimal) {
                         TamableAnimal tamableAnimal = (TamableAnimal) animalFacing;
-                        sender.sendMessage("§6§l------------< PET INFO >------------");
-                        sender.sendMessage("§6§l| §r§1Entity Type: §r§9" + playerFacing.getType());
+                        sender.sendMessage("§6§l--------< INFO O ZWIERZAKU >--------");
+                        sender.sendMessage("§6§l| §r§1Typ: §r§9" + playerFacing.getType());
                         if (playerFacing.getName() != null) {
-                            sender.sendMessage("§6§l| §r§1Entity Name: §r§9" + playerFacing.getName());
+                            sender.sendMessage("§6§l| §r§1Nazwa: §r§9" + playerFacing.getName());
                         }
-                        sender.sendMessage("§6§l| §r§1Entity UUID: §r§9" + playerFacing.getUniqueId());
-                        sender.sendMessage("§6§l| §r§1Health: §r§9" + tamableAnimal.getHealth() + "/" + tamableAnimal.getMaxHealth());
-                        String isTame = (tamableAnimal.isTame()) ? "Yes" : "No";
-                        sender.sendMessage("§6§l| §r§1Tamed: §r§9" + isTame);
+                        sender.sendMessage("§6§l| §r§1UUID: §r§9" + playerFacing.getUniqueId());
+                        sender.sendMessage("§6§l| §r§1Zdrowie: §r§9" + tamableAnimal.getHealth() + "/" + tamableAnimal.getMaxHealth());
+                        String isTame = (tamableAnimal.isTame()) ? "Tak" : "Nie";
+                        sender.sendMessage("§6§l| §r§1Oswojone: §r§9" + isTame);
                         if (tamableAnimal.isTame()) {
                             UUID ownerUUID = Objects.requireNonNull(tamableAnimal.getOwnerReference()).getUUID();
                             if (ownerUUID != null) {
@@ -67,48 +67,49 @@ public class PetInfoCommand implements CommandExecutor {
                                     PetControl.cacheManager.addTamedAnimalEntry(tae);
                                 }
                                 String ownerName = Bukkit.getOfflinePlayer(ownerUUID).getName();
-                                sender.sendMessage("§6§l| §r§1Owner: §r§9" + ownerName);
-                                String isSitting = (tamableAnimal.isInSittingPose()) ? "Yes" : "No";
-                                sender.sendMessage("§6§l| §r§1Sitting: §r§9" + isSitting);
+                                sender.sendMessage("§6§l| §r§1Właściciel: §r§9" + ownerName);
+                                String isSitting = (tamableAnimal.isInSittingPose()) ? "Tak" : "Nie";
+                                sender.sendMessage("§6§l| §r§1Siedzi: §r§9" + isSitting);
                                 if (roaming) {
                                     roamingRadius = rae.getRadius();
                                     roamingCenterX = rae.getCenterX();
                                     roamingCenterZ = rae.getCenterZ();
-                                    sender.sendMessage("§6§l| §r§1Roaming: §r§9Yes");
-                                    sender.sendMessage("§6§l| §r§1Roaming Radius: §r§9" + roamingRadius);
-                                    sender.sendMessage("§6§l| §r§1Roaming Center: §r§9" + roamingCenterX + ", " + roamingCenterZ);
+                                    sender.sendMessage("§6§l| §r§1Wędrowanie: §r§9Tak");
+                                    sender.sendMessage("§6§l| §r§1Promień wędrowania: §r§9" + roamingRadius);
+                                    sender.sendMessage("§6§l| §r§1Środek wędrowania: §r§9" + roamingCenterX + ", " + roamingCenterZ);
                                 } else {
-                                    sender.sendMessage("§6§l| §r§1Roaming: §r§9No");
+                                    sender.sendMessage("§6§l| §r§1Wędrowanie: §r§9Nie");
                                 }
                                 if (tae != null) {
-                                    sender.sendMessage("§6§l| §r§1Guarded: §r§9" + (tae.isGuarded() ? "Yes" : "No"));
+                                    sender.sendMessage("§6§l| §r§1Pilnuje terenu: §r§9" + (tae.isGuarded() ? "Tak" : "Nie"));
                                 }
                             }
                         }
                         sender.sendMessage("§6§l------------------------------------");
                         return true;
-                    } else if (PetControl.SUPPORTED_ANIMAL_TYPES.contains(playerFacing.getType().toString()) && playerFacing instanceof Mob) {
-                        // Support for other types of animals that are near-tamable
-                        Mob playerFacingMob = (Mob) playerFacing;
-                        sender.sendMessage("§6§l------------< ANIMAL INFO >------------");
-                        sender.sendMessage("§6§l| §r§1Entity Type: §r§9" + playerFacing.getType());
+                    } else if (playerFacing instanceof LivingEntity && !(playerFacing instanceof Player)) {
+                        // Support for every other living entity, not only the near-tamable ones
+                        LivingEntity playerFacingLiving = (LivingEntity) playerFacing;
+                        sender.sendMessage("§6§l--------< INFO O STWORZENIU >--------");
+                        sender.sendMessage("§6§l| §r§1Typ: §r§9" + playerFacing.getType());
                         if (playerFacing.getName() != null) {
-                            sender.sendMessage("§6§l| §r§1Entity Name: §r§9" + playerFacing.getName());
+                            sender.sendMessage("§6§l| §r§1Nazwa: §r§9" + playerFacing.getName());
                         }
-                        sender.sendMessage("§6§l| §r§1Entity UUID: §r§9" + playerFacing.getUniqueId());
-                        sender.sendMessage("§6§l| §r§1Health: §r§9" + playerFacingMob.getHealth() + "/" + playerFacingMob.getMaxHealth());
+                        sender.sendMessage("§6§l| §r§1UUID: §r§9" + playerFacing.getUniqueId());
+                        sender.sendMessage("§6§l| §r§1Zdrowie: §r§9" + playerFacingLiving.getHealth() + "/" + playerFacingLiving.getMaxHealth());
                         sender.sendMessage("§6§l---------------------------------------");
+                        return true;
                     }
-                    sender.sendMessage("§4This is not an animal we support getting info on!");
-                    return false;
+                    sender.sendMessage("§cNie potrafię pokazać informacji o tym obiekcie - wyceluj w żywe stworzenie.");
+                    return true;
                 }
-                sender.sendMessage("§4Please face an animal.");
-                return false;
+                sender.sendMessage("§cNie patrzysz na żadne stworzenie. Podejdź bliżej (do 10 kratek) i wyceluj w nie kursorem.");
+                return true;
             }
-            sender.sendMessage("§4Access denied.");
+            sender.sendMessage("§cNie masz uprawnień do tej komendy.");
             return true;
         }
-        sender.sendMessage("§4This command must be sent by a player!");
-        return false;
+        sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+        return true;
     }
 }

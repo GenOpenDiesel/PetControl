@@ -32,20 +32,20 @@ public class ToggleSitCommand implements CommandExecutor {
                         if (tamableAnimal.isTame()) {
                             tamableAnimal.setOrderedToSit(!tamableAnimal.isOrderedToSit());
                             PetControl.cacheManager.getTamedAnimalFromUUID(tamableAnimal.getUUID()).setSitting(tamableAnimal.isOrderedToSit());
-                            sender.sendMessage("§bAnimal sitting toggled.");
+                            sender.sendMessage("§aZmieniono pozycję zwierzaka (siedzi/stoi).");
                             return true;
                         }
-                        sender.sendMessage("§4Animal must be tamed!");
-                        return false;
+                        sender.sendMessage("§cTo stworzenie nie jest oswojone - najpierw je oswój.");
+                        return true;
                     }
                 }
-                sender.sendMessage("§4You must face a tamed animal!");
-                return false;
+                sender.sendMessage("§cWyceluj w oswojonego zwierzaka.");
+                return true;
             }
-            sender.sendMessage("§4Access denied.");
+            sender.sendMessage("§cNie masz uprawnień do tej komendy.");
             return true;
         }
-        sender.sendMessage("§4This command must be sent by a player!");
-        return false;
+        sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+        return true;
     }
 }

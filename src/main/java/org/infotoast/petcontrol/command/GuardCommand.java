@@ -33,30 +33,30 @@ public class GuardCommand implements CommandExecutor {
                         if (entry == null) {
                             boolean isGuarded = false;
                             PetControl.cacheManager.addTamedAnimalEntry(new TamedAnimalEntry(PetControl.cacheManager.getAnimalTypeFromEntity(tameable), tameable.getUniqueId(), UUID.randomUUID(), tameable.getName(), player.getName(), tamableAnimal.isOrderedToSit(), true, false));
-                            sender.sendMessage("§bGuarding is now §a§lon§r§b for §l§a" + tameable.getName());
+                            sender.sendMessage("§aPilnowanie terenu §lWŁĄCZONE§r§a dla: §l" + tameable.getName());
                             return true;
                         } else {
                             boolean isGuarded = PetControl.cacheManager.getTamedAnimalFromUUID(tameable.getUniqueId()).isGuarded();
                             PetControl.cacheManager.getTamedAnimalFromUUID(tameable.getUniqueId()).setGuarded(!isGuarded);
-                            String guardStatus = (!isGuarded) ? "on" : "off";
-                            sender.sendMessage("§bGuarding toggled §a§l" + guardStatus + " §r§bfor §l§a" + tameable.getName());
+                            String guardStatus = (!isGuarded) ? "WŁĄCZONE" : "WYŁĄCZONE";
+                            sender.sendMessage("§aPilnowanie terenu: §l" + guardStatus + "§r§a dla: §l" + tameable.getName());
                             return true;
                         }
                     } else {
-                        sender.sendMessage("§cThis animal is not tamed.");
-                        return false;
+                        sender.sendMessage("§cTo stworzenie nie jest oswojone - najpierw je oswój.");
+                        return true;
                     }
                 } else {
-                    sender.sendMessage("§cYou are not facing an animal.");
-                    return false;
+                    sender.sendMessage("§cNie patrzysz na żadne stworzenie. Podejdź bliżej (do 10 kratek) i wyceluj w nie kursorem.");
+                    return true;
                 }
             } else {
-                sender.sendMessage("§cYou do not have permission to use this command.");
-                return false;
+                sender.sendMessage("§cNie masz uprawnień do tej komendy.");
+                return true;
             }
         } else {
-            sender.sendMessage("§cOnly players can use this command.");
-            return false;
+            sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+            return true;
         }
     }
 }

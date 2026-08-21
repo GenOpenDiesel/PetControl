@@ -40,43 +40,43 @@ public class FollowCommand implements CommandExecutor {
                             if (ownerUUID.equals(player.getUniqueId()) || sender.hasPermission("petcontrol.follow.others")) {
                                 if (tamableAnimal instanceof RoamingCat) {
                                     Cat newCat = ((RoamingCat) tamableAnimal).convertToCat();
-                                    sender.sendMessage("§bCat is now reset to normal AI and will follow and teleport.");
-                                    sender.sendMessage("§bUUID: " + newCat.getUUID());
+                                    sender.sendMessage("§aKot wrócił do normalnego trybu - będzie chodził za Tobą i teleportował się.");
+                                    sender.sendMessage("§7UUID: §f" + newCat.getUUID());
                                     disableRoamingInCache(tamableAnimal, newCat);
                                     return true;
                                 } else if (tamableAnimal instanceof RoamingDog) {
                                     Wolf newWolf = ((RoamingDog) tamableAnimal).convertToWolf();
-                                    sender.sendMessage("§bDog is now reset to normal AI and will follow and teleport.");
-                                    sender.sendMessage("§bUUID: " + newWolf.getUUID());
+                                    sender.sendMessage("§aPies wrócił do normalnego trybu - będzie chodził za Tobą i teleportował się.");
+                                    sender.sendMessage("§7UUID: §f" + newWolf.getUUID());
                                     disableRoamingInCache(tamableAnimal, newWolf);
                                     return true;
                                 } else {
-                                    sender.sendMessage("§4You must face a cat or dog that is roaming.");
-                                    return false;
+                                    sender.sendMessage("§cWyceluj w kota lub psa, który jest w trybie wędrowania (/roam).");
+                                    return true;
                                 }
                             } else {
-                                sender.sendMessage("§4You do not have permission to make set other's animals to follow mode.");
-                                return false;
+                                sender.sendMessage("§cMożesz zmieniać tryb tylko swoim zwierzakom.");
+                                return true;
                             }
                         } else {
-                            sender.sendMessage("§4This command only works for tamed animals.");
-                            return false;
+                            sender.sendMessage("§cTo stworzenie nie jest oswojone - najpierw je oswój.");
+                            return true;
                         }
                     } else {
-                        sender.sendMessage("§4You must face a tamable animal.");
-                        return false;
+                        sender.sendMessage("§cTego stworzenia nie da się oswoić. Wyceluj w psa, kota, konia itp.");
+                        return true;
                     }
                 } else {
-                    sender.sendMessage("§4You must face an animal.");
-                    return false;
+                    sender.sendMessage("§cNie patrzysz na żadne stworzenie. Podejdź bliżej (do 10 kratek) i wyceluj w nie kursorem.");
+                    return true;
                 }
             } else {
-                sender.sendMessage("§4You do not have permission to use this command!");
+                sender.sendMessage("§cNie masz uprawnień do tej komendy.");
                 return true;
             }
         } else {
-            sender.sendMessage("Only players can use this command!");
-            return false;
+            sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+            return true;
         }
     }
 

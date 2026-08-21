@@ -2,78 +2,78 @@ name: PetControl
 version: '${version}'
 main: org.infotoast.petcontrol.PetControl
 api-version: '26.1'
-description: Manages pets, transfers ownership, and tames wild animals
+description: Zarzadzanie zwierzakami - info, oswajanie, przekazywanie wlascicielstwa
 load: STARTUP
 author: Frank
 website: infotoast.org
 commands:
   petinfo:
-    description: Gets info on a tamable animal
+    description: Pokazuje informacje o stworzeniu, na ktore patrzysz
     permission: petcontrol.petinfo
-    usage: "Usage: /<command>"
+    usage: "§cUzycie: /<command> - wyceluj w stworzenie"
   transferpetowner:
-    description: Transfers ownership of a pet
+    description: Przekazuje zwierzaka innemu graczowi
     permission: petcontrol.transferpetowner
-    usage: "Usage: /<command> <owner>"
+    usage: "§cUzycie: /<command> <gracz>"
   tamepet:
-    description: Tames an unowned tamable mob
+    description: Oswaja dzikie zwierze
     permission: petcontrol.tamepet
-    usage: "/<command> [owner]"
+    usage: "§cUzycie: /<command> [gracz]"
   togglesit:
-    description: Toggles whether an animal is sitting, regardless of owner
+    description: Sadza lub podnosi zwierzaka
     permission: petcontrol.togglesit
-    usage: "/<command>"
+    usage: "§cUzycie: /<command>"
   healpet:
-    description: Heals the tamable animal you're looking at
+    description: Leczy zwierzaka, na ktorego patrzysz
     permission: petcontrol.heal
-    usage: "/<command>"
+    usage: "§cUzycie: /<command>"
   roam:
-    description: Makes the pet roam around instead of following you
+    description: Ustawia zwierzakowi teren do chodzenia zamiast chodzenia za Toba
     permission: petcontrol.roam
-    usage: "/<command> <radius> [center x] [center z] [guarded]"
+    usage: "§cUzycie: /<command> <promien> [srodek x] [srodek z] [pilnowanie]"
   follow:
-    description: Makes a roaming animal go back to follow (normal) mode
+    description: Przywraca zwierzakowi chodzenie za Toba
     permission: petcontrol.follow
-    usage: "/<command>"
+    usage: "§cUzycie: /<command>"
   guard:
-    description: Toggles whether an animal is guarded
+    description: Wlacza/wylacza pilnowanie terenu przez zwierzaka
     permission: petcontrol.guard
-    usage: "/guard"
+    usage: "§cUzycie: /guard"
 
 permissions:
   petcontrol.petinfo:
-    description: Allows you to use /petinfo
+    description: Pozwala uzywac /petinfo
     default: true
   petcontrol.transferpetowner:
-    description: Allows you to transfer pet ownership with /transferpetowner
+    description: Pozwala przekazywac zwierzaki innym graczom
     default: op
   petcontrol.tamepet.self:
-    description: Allows you to tame pet to be owned by yourself
+    description: Pozwala oswajac zwierzaki dla siebie
     default: op
   petcontrol.tamepet.others:
-    description: Allows you to tame pets to be given to others
+    description: Pozwala oswajac zwierzaki dla innych graczy
     default: op
   petcontrol.togglesit:
-    description: Allows you to toggle pet sitting with /togglesit
+    description: Pozwala sadzac i podnosic zwierzaki
     default: op
   petcontrol.heal:
-    description: Allows you to heal pets with /healpet
+    description: Pozwala leczyc zwierzaki
     default: op
   petcontrol.roam:
-    description: Makes pets roam around instead of following you
+    description: Pozwala ustawiac zwierzakom teren do chodzenia
     default: true
   petcontrol.roam.others:
-    description: Allows you to roam other's pets
+    description: Pozwala ustawiac teren zwierzakom innych graczy
     default: op
   petcontrol.roam.guarded:
-    description: Allows you to set guarded mode when pets are roaming
+    description: Pozwala wlaczac pilnowanie terenu przy /roam
     default: op
   petcontrol.follow:
-    description: Allows you to use /follow
+    description: Pozwala uzywac /follow
     default: true
   petcontrol.follow.others:
-    description: Allows you to set other's animals to follow mode
+    description: Pozwala zmieniac tryb zwierzakom innych graczy
     default: op
   petcontrol.guard:
-    description: Allows you to use /guard
+    description: Pozwala uzywac /guard
     default: op

@@ -44,25 +44,25 @@ public class TransferPetOwnerCommand implements CommandExecutor {
                                 tae.setOwnerUUID(newOwner.getUniqueId());
                                 tae.setOwnerName(newOwner.getName());
                                 PetControl.cacheManager.addTamedAnimalEntry(tae);
-                                sender.sendMessage("§bLast Owner: " + lastOwnerName);
-                                sender.sendMessage("§bNew Owner: " + nextOwnerName);
-                                sender.sendMessage("§5Ownership successfully transferred!");
+                                sender.sendMessage("§7Poprzedni właściciel: §f" + lastOwnerName);
+                                sender.sendMessage("§7Nowy właściciel: §f" + nextOwnerName);
+                                sender.sendMessage("§aZwierzak został przekazany nowemu właścicielowi!");
                                 return true;
                             }
-                            sender.sendMessage("§4Please provide a playername");
-                            return false;
+                            sender.sendMessage("§cPodaj nazwę gracza. Użycie: §7/transferpetowner <gracz>");
+                            return true;
                         }
                     }
-                    sender.sendMessage("§4Animal must be tamed!");
-                    return false;
+                    sender.sendMessage("§cTo stworzenie nie jest oswojone - najpierw je oswój.");
+                    return true;
                 }
-                sender.sendMessage("§4You are not facing an animal!");
-                return false;
+                sender.sendMessage("§cNie patrzysz na żadne stworzenie. Podejdź bliżej (do 10 kratek) i wyceluj w nie kursorem.");
+                return true;
             }
-            sender.sendMessage("§4Access denied.");
+            sender.sendMessage("§cNie masz uprawnień do tej komendy.");
             return true;
         }
-        sender.sendMessage("You must be a player to use this command!");
-        return false;
+        sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+        return true;
     }
 }

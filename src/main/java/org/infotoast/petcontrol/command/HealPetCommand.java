@@ -28,17 +28,17 @@ public class HealPetCommand implements CommandExecutor {
                     if (animalFacing instanceof TamableAnimal) {
                         TamableAnimal tamableAnimalFacing = (TamableAnimal) animalFacing;
                         tamableAnimalFacing.setHealth(tamableAnimalFacing.getMaxHealth());
-                        sender.sendMessage("§bAnimal healed!");
+                        sender.sendMessage("§aZwierzak wyleczony!");
                         return true;
                     }
                 }
-                sender.sendMessage("§4You must face tamable animal.");
-                return false;
+                sender.sendMessage("§cWyceluj w zwierzaka, którego da się oswoić (pies, kot, koń itp.).");
+                return true;
             }
-            sender.sendMessage("§4Access denied.");
+            sender.sendMessage("§cNie masz uprawnień do tej komendy.");
             return true;
         }
-        sender.sendMessage("§4You must be a player to use this command!");
-        return false;
+        sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+        return true;
     }
 }

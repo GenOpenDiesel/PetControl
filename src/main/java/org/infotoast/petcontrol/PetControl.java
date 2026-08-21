@@ -62,7 +62,7 @@ public final class PetControl extends JavaPlugin {
                 roamingTeam = scoreboardManager.getMainScoreboard().getTeam("roaming");
             }
         });
-        getServer().getConsoleSender().sendMessage("§l§bPetControl has been enabled!");
+        getServer().getConsoleSender().sendMessage("§l§bPetControl wlaczony!");
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class PetControl extends JavaPlugin {
         if (petSitOrStandTracker != null) {
             petSitOrStandTracker.stop();
         }
-        getServer().getConsoleSender().sendMessage("§l§bPetControl disabled.");
+        getServer().getConsoleSender().sendMessage("§l§bPetControl wylaczony.");
     }
 
     public static Entity getPlayerFacingEntity(Player player) {

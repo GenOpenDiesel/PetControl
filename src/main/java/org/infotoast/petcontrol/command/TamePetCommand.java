@@ -37,44 +37,44 @@ public class TamePetCommand implements CommandExecutor {
                                     String nextOwnerName = args[0];
                                     newOwner = Bukkit.getOfflinePlayer(nextOwnerName);
                                     if (!newOwner.hasPlayedBefore()) {
-                                        sender.sendMessage("§4Player either does not exist or has not played before!");
-                                        return false;
+                                        sender.sendMessage("§cNie ma takiego gracza albo nigdy nie był na serwerze.");
+                                        return true;
                                     }
                                 } else {
-                                    sender.sendMessage("§4You do not have permission to tame pets for other people.");
-                                    return false;
+                                    sender.sendMessage("§cNie masz uprawnień, by oswajać zwierzaki dla innych graczy.");
+                                    return true;
                                 }
                             } else if (args.length == 0) {
                                 if (sender.hasPermission("petcontrol.tamepet.self")) {
                                     newOwner = (Player)sender;
                                 } else {
-                                    sender.sendMessage("§4You do not have permission to tame pets for yourself.");
-                                    return false;
+                                    sender.sendMessage("§cNie masz uprawnień, by oswajać zwierzaki.");
+                                    return true;
                                 }
                             } else {
-                                sender.sendMessage("§4Too many arguments. Command usage: tamepet <Player>.");
-                                return false;
+                                sender.sendMessage("§cZa dużo argumentów. Użycie: §7/tamepet [gracz]");
+                                return true;
                             }
                             tamableAnimal.setOwner(newOwner);
-                            sender.sendMessage("§bAnimal has been tamed!");
+                            sender.sendMessage("§aZwierzak został oswojony!");
                             AnimalType animalType = PetControl.cacheManager.getAnimalTypeFromEntity(tamableAnimal);
                             TamedAnimalEntry tae = new TamedAnimalEntry(animalType, tamableAnimal.getUniqueId(), newOwner.getUniqueId(), tamableAnimal.getName(), newOwner.getName(), true, false, false);
                             PetControl.cacheManager.addTamedAnimalEntry(tae);
                             return true;
                         }
-                        sender.sendMessage("§4Animal is already tamed! Use /transferpetowner instead.");
-                        return false;
+                        sender.sendMessage("§cTen zwierzak ma już właściciela. Użyj §7/transferpetowner§c, aby go przekazać.");
+                        return true;
                     }
-                    sender.sendMessage("§4That animal cannot be tamed.");
-                    return false;
+                    sender.sendMessage("§cTego stworzenia nie da się oswoić. Wyceluj w psa, kota, konia itp.");
+                    return true;
                 }
-                sender.sendMessage("§4Please face an animal before sending this command.");
-                return false;
+                sender.sendMessage("§cNie patrzysz na żadne stworzenie. Podejdź bliżej (do 10 kratek) i wyceluj w nie kursorem.");
+                return true;
             }
-            sender.sendMessage("§4Access denied.");
+            sender.sendMessage("§cNie masz uprawnień do tej komendy.");
             return true;
         }
-        sender.sendMessage("§4This command must be sent by a player!");
-        return false;
+        sender.sendMessage("§cTę komendę może wykonać tylko gracz (nie konsola).");
+        return true;
     }
 }
